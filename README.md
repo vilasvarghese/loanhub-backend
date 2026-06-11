@@ -1,6 +1,6 @@
 # loanhub-backend
 
-Spring Boot 3.2.4 REST API for the LoanHub digital lending portal. Java 21 · Maven · PostgreSQL · Firebase-issued JWT auth.
+Spring Boot 3.2.4 REST API for the LoanHub digital lending portal. Java 21 · Maven · PostgreSQL · self-issued HS256 JWT auth.
 
 Part of the LoanHub polyrepo:
 [`loanhub-backend`](https://github.com/raj-pro/loanhub-backend) ·
@@ -35,7 +35,7 @@ Externalized via environment variables (12-factor). Key ones:
 |----------|---------|
 | `SPRING_DATASOURCE_URL` / `_USERNAME` / `_PASSWORD` | PostgreSQL connection |
 | `APP_CORS_ALLOWED_ORIGINS` | Allowed browser origins |
-| `APP_FIREBASE_PROJECT_ID` | Firebase project for JWT validation |
+| `JWT_SECRET` | HS256 signing secret (≥ 32 chars) |
 
 In Kubernetes these come from a ConfigMap (non-secret) + Secret (DB password) — see `loanhub-gitops`.
 
