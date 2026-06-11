@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: loanhub-backend
+
+  # PostgreSQL datastore. In Docker Compose these are injected to point at the `db` service;
+  # the defaults below target a locally-running PostgreSQL for `mvn spring-boot:run`.
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/loanhub}
+    driver-class-name: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME:loanhub}
+    password: ${SPRING_DATASOURCE_PASSWORD:loanhub}
+
+  jpa:
+    # Dialect is auto-detected from the datasource; no need to set it explicitly.
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    # Close the persistence context at the end of the request, not during view rendering.
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  # Secret used to sign/verify auth JWTs (HS256). MUST be >= 32 chars and overridden in any
+  # real deployment via JWT_SECRET. The default below is for local development only.
+  jwt:
+    secret: ${JWT_SECRET:dev-only-change-me-loanhub-jwt-secret-key-0123456789}
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:720}
+  # CORS allow-list for the browser front-end (comma-separated; env APP_CORS_ALLOWED_ORIGINS).
+  # When the SPA is served via the bundled nginx proxy, requests are same-origin.
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:3000,http://127.0.0.1:3000}

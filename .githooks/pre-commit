@@ -1,0 +1,13 @@
+#!/bin/sh
+# LoanHub backend pre-commit hook — runs Checkstyle before allowing a commit.
+#
+# Enable once per clone:
+#   git config core.hooksPath .githooks
+#
+# Note: the first run downloads the Checkstyle plugin; later runs are fast.
+# Requires JDK 21 on PATH (see the repo README for the JAVA_HOME note).
+set -e
+echo "[pre-commit] Running Checkstyle..."
+mvn -q -ntp org.apache.maven.plugins:maven-checkstyle-plugin:3.3.1:check \
+  -Dcheckstyle.config.location=checkstyle.xml
+echo "[pre-commit] Checkstyle passed."

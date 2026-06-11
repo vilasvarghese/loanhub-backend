@@ -1,0 +1,49 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: build & test (JDK 21)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # IMPORTANT: pin Temurin 21. Newer JDKs break Spring Boot 3.2.4
+      # (Lombok / Mockito / Spring lambda-converter resolution all fail).
+      - name: Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Build & test
+        run: mvn -B -ntp verify
+
+  checkstyle:
+    name: checkstyle
+    runs-on: ubuntu-latest
+    # Non-blocking for now: establishes the gate without failing CI on the
+    # existing tree. Remove continue-on-error once the code is clean.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Run Checkstyle
+        run: >
+          mvn -B -ntp org.apache.maven.plugins:maven-checkstyle-plugin:3.3.1:check
+          -Dcheckstyle.config.location=checkstyle.xml
+
+  # TODO (Phase 3): add jobs for Trivy (image scan), Snyk/OWASP (deps),
+  # SonarQube (quality), then build & push the image to ECR with a semver tag.
