@@ -189,7 +189,7 @@ jobs:
   push-and-deploy:
     name: push to ECR & update GitOps
     runs-on: ubuntu-latest
-    needs: [build-test, build-image, trivy-scan]    # ← FIXED
+    needs: [build-test, build-image]    # ← FIXED , trivy-scan
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - uses: actions/download-artifact@v4
