@@ -221,7 +221,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: raj-pro/loanhub-gitops
+          repository: vilasvarghese/loanhub-gitops
           token: ${{ secrets.GITOPS_TOKEN }}
           path: gitops
 
